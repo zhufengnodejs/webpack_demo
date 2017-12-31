@@ -2,15 +2,20 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const publicPath = "http://localhost:8080/";
+console.log( encodeURIComponent(process.env.type) );
+const publicPath = process.env.NODE_ENV =='build'?"http://localhost:8080/":"http://localhost:9090/";
 const glob = require('glob');
 const PurifyCSSPlugin = require("purifycss-webpack");
+const webpack = require('webpack');
+const CopyWebPackPlugin = require('copy-webpack-plugin');
 module.exports = {
   devtool:'eval-source-map',
   //入口配置文件
   entry: {
     entry: './src/entry.js',
-    entry2: './src/entry2.js'
+    entry2: './src/entry2.js',
+    jquery:'jquery',
+    vue:'vue'
   },
   //出口配置文件
   output: {
@@ -81,6 +86,26 @@ module.exports = {
   },
   //插件，用于生产模式和各项功能
   plugins: [
+    new CopyWebPackPlugin([
+      {
+        from:'./src/public',
+        to:'./public'
+      }
+    ]),
+    new webpack.optimize.CommonsChunkPlugin({
+      //name对应的是入口文件中的名字，我们起的是jQuery
+      name:['jquery','vue'],
+      //把文件打包到哪里,是一个路径
+      filename:'assets/js/[name].js',
+      //最小打包的文件模块数
+      minChunks:2
+    }),
+    new webpack.BannerPlugin('教程'),
+    //全局的引入
+    new webpack.ProvidePlugin({
+      $:"jquery"
+    }),
+    new webpack.HotModuleReplacementPlugin(),
     new UglifyJsPlugin(),
     new HtmlWebpackPlugin({
       minify:{

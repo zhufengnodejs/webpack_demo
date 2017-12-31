@@ -1,10 +1,32 @@
+/*! 教程 */
 body {
-    background-color: red;
-    color: white;
+  background-color: red;
+  color: white;
 }
-#avatar{
-    background-image: url(http://localhost:8080322db4df851ee08a7ec3f48edb35eb1a.jpg);
-    height:400px;
-    width: 400px;
-    border-radius: 50%;
+
+img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+}
+
+#avatar {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  background-size: cover;
+  /*覆盖背景区域 contain:扩展至最大尺寸*/
+  background-image: url(http://localhost:9090/images/322db4df851ee08a7ec3f48edb35eb1a.jpg);
+}
+
+#bg {
+  width: 200px;
+  height: 200px;
+  background-color: #000;
+}
+
+#footer {
+  width: 100px;
+  height: 200px;
+  background-color: #CCC;
 }
