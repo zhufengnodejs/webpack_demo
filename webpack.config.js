@@ -3,7 +3,10 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const publicPath = "http://localhost:8080/";
+const glob = require('glob');
+const PurifyCSSPlugin = require("purifycss-webpack");
 module.exports = {
+  devtool:'eval-source-map',
   //入口配置文件
   entry: {
     entry: './src/entry.js',
@@ -20,10 +23,41 @@ module.exports = {
   module: {
     rules:[
       {
+        test:/\.(jsx|js)$/,
+        use:{
+          loader:'babel-loader',
+          options:{
+            presets:[
+              "env","react"
+            ]
+          }
+        },
+        exclude:/node_modules/
+      },
+      {
         test:/\.css$/,
         use:ExtractTextPlugin.extract({
           fallback:"style-loader",//备份的时候，如果提取CSS失败则走style-loader
-          use:"css-loader",
+          use:[
+            {loader:'css-loader',options:{importLoaders:1}},
+            "postcss-loader"
+          ],
+          publicPath
+        })
+      },
+      {
+        test:/\.less$/,
+        use:ExtractTextPlugin.extract({
+          fallback:"style-loader",//备份的时候，如果提取CSS失败则走style-loader
+          use:["css-loader","less-loader"],
+          publicPath
+        })
+      },
+      {
+        test:/\.scss/,
+        use:ExtractTextPlugin.extract({
+          fallback:"style-loader",//备份的时候，如果提取CSS失败则走style-loader
+          use:["css-loader","sass-loader"],
           publicPath
         })
       },
@@ -57,6 +91,9 @@ module.exports = {
     }),
     //CSS文件存放的路径
     new ExtractTextPlugin("css/index.css"),
+    new PurifyCSSPlugin({
+      paths:glob.sync(path.join(__dirname,'src/*.html'))
+    })
   ],
   //配置webpack开发服务功能
   devServer: {
