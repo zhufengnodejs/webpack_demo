@@ -2,7 +2,7 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const publicPath = "http://localhost:8080";
+const publicPath = "http://localhost:8080/";
 module.exports = {
   //入口配置文件
   entry: {
@@ -15,7 +15,6 @@ module.exports = {
     path: path.resolve('dist'),
     //输出的文件名
     filename: '[name].js',
-    publicPath
   },
   //模块： 例如读取 CSS 图片如何转变换 压缩
   module: {
@@ -23,8 +22,9 @@ module.exports = {
       {
         test:/\.css$/,
         use:ExtractTextPlugin.extract({
-          fallback:"style-loader",
-          use:"css-loader"
+          fallback:"style-loader",//备份的时候，如果提取CSS失败则走style-loader
+          use:"css-loader",
+          publicPath
         })
       },
       {
@@ -33,7 +33,7 @@ module.exports = {
           {
             loader:'url-loader',
             options:{
-              limit:50000
+              limit:5
             }
           }
         ]
@@ -50,8 +50,8 @@ module.exports = {
       hash:true,
       template:'./src/index.html'
     }),
+    //CSS文件存放的路径
     new ExtractTextPlugin("css/index.css"),
-
   ],
   //配置webpack开发服务功能
   devServer: {

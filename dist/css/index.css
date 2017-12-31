@@ -1,0 +1,10 @@
+body {
+    background-color: red;
+    color: white;
+}
+#avatar{
+    background-image: url(http://localhost:8080322db4df851ee08a7ec3f48edb35eb1a.jpg);
+    height:400px;
+    width: 400px;
+    border-radius: 50%;
+}
