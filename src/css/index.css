@@ -1,0 +1,10 @@
+body {
+    background-color: red;
+    color: white;
+}
+#avatar{
+    background-image: url(../images/avatar.jpg);
+    height:400px;
+    width: 400px;
+    border-radius: 50%;
+}
